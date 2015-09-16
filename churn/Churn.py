@@ -131,17 +131,67 @@ ggplot(counts,aes(x='pred_prob',y='true_prob',size='count')) + \
     stat_function(fun = lambda x: x, color='red') + \
     stat_function(fun = lambda x: baseline, color='green') + \
     xlim(-0.05,  1.05) + ylim(-0.05,1.05) + \
-    ggtitle("Random Forest") + \
+    ggtitle("Decision tree") + \
     xlab("Predicted probability") + ylab("Relative frequency of outcome")
 
 #***
 
 
-from sklearn.cross_validation import train_test_split
+#
+#Scikit-Learn provides a lot of metrics for your own evaluation. You could also build your own fbeta score if you want to weight precision more than recall or vice versa by using fbeta_score function under metrics in Scikit Learn.
 
-train_index,test_index = train_test_split(churn_df.index)
-clf = SVC(probability=True)
-clf.fit(X[train_index],y[train_index])
+#Search engines and generally information retrieval care more about precision than recall. A user could visit only so many webpages but when she visits first and second pages, she needs to see relevant/accurate results based on her query. Recall may not be very important for those cases as she is limited by time and recall may not be that important for the search results she sees.
 
-test_churn_df = churn_df.ix[test_index]
-test_churn_df.to_csv("/Users/saharbenarfa/Desktop/test_churn.csv")
+
+
+from sklearn import ensemble
+gbc = ensemble.GradientBoostingClassifier()
+gbc.fit(X, y)
+
+
+
+import matplotlib.pyplot as plt
+
+# Get Feature Importance from the classifier
+feature_importance = gbc.feature_importances_
+# Normalize The Features
+feature_importance = 100.0 * (feature_importance / feature_importance.max())
+sorted_idx = np.argsort(feature_importance)
+pos = np.arange(sorted_idx.shape[0]) + .5
+plt.figure(figsize=(16, 12))
+plt.barh(pos, feature_importance[sorted_idx], align='center', color='#7A68A6')
+plt.yticks(pos, np.asanyarray(churn_df .columns.tolist())[sorted_idx])
+plt.xlabel('Relative Importance')
+plt.title('Variable Importance')
+plt.show()
+
+# confusion matrix
+
+from sklearn.metrics import confusion_matrix
+
+y = np.array(y)
+class_names = np.unique(y)
+
+confusion_matrices = [
+    ( "Support Vector Machines", confusion_matrix(y,run_cv(X,y,SVC)) ),
+]
+
+from sklearn.metrics import confusion_matrix
+
+%matplotlib inline
+
+
+
+# Compute confusion matrix
+cm = confusion_matrix(y, run_cv(X,y,RF))
+
+print(cm)
+
+# Show confusion matrix in a separate window
+plt.matshow(cm)
+plt.title('Confusion matrix')
+plt.colorbar()
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
+plt.show()
+
