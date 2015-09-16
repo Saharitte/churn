@@ -8,7 +8,11 @@ from __future__ import division
 import pandas as pd
 import numpy as np
 
+
+#Load data
 churn_df = pd.read_csv('data/dataChurn/churn.csv')
+
+# column
 col_names = churn_df.columns.tolist()
 
 print "Column names:"
@@ -25,11 +29,13 @@ churn_df[to_show].head(6)
 churn_result = churn_df['Churn?']
 y = np.where(churn_result == 'True.',1,0)
 
-# We don't need these columns
+# these variables were used for identification only so we don7t need these column 
 to_drop = ['State','Area Code','Phone','Churn?']
 churn_feat_space = churn_df.drop(to_drop,axis=1)
 
-# 'yes'/'no' has to be converted to boolean values
+
+#Preprocessing
+# convert yes/no to  boolean values
 # NumPy converts these from boolean to 1. and 0. later
 yes_no_cols = ["Int'l Plan","VMail Plan"]
 churn_feat_space[yes_no_cols] = churn_feat_space[yes_no_cols] == 'yes'
@@ -39,13 +45,18 @@ features = churn_feat_space.columns
 
 X = churn_feat_space.as_matrix().astype(np.float)
 
-# This is important
+
+
+
+# Data transfornation
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
 print "Feature space holds %d observations and %d features" % X.shape
 print "Unique target labels:", np.unique(y)
+
+
 
 #********************
 
