@@ -195,3 +195,15 @@ plt.ylabel('True label')
 plt.xlabel('Predicted label')
 plt.show()
 
+
+# Data visualization
+
+import pydot
+
+dt = DecisionTreeClassifier(max_depth=5, class_weight='auto')
+dt.fit(X, y)
+
+export_graphviz(dt, '/Users/saharbenarfa/Desktop/tree.doc') 
+
+
+
