@@ -71,19 +71,14 @@ def run_cv(X,y,clf_class,**kwargs):
 #***********
 
 from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier as RF
-from sklearn.neighbors import KNeighborsClassifier as KNN
-
+from sklearn.tree import DecisionTreeClassifier
 def accuracy(y_true,y_pred):
     # NumPy interprets True and False as 1. and 0.
     return np.mean(y_true == y_pred)
 
-print "Support vector machines:"
-print "%.3f" % accuracy(y, run_cv(X,y,SVC))
-print "Random forest:"
+
+print "Decision Tree:"
 print "%.3f" % accuracy(y, run_cv(X,y,RF))
-print "K-nearest-neighbors:"
-print "%.3f" % accuracy(y, run_cv(X,y,KNN))
 
 
 #**********
