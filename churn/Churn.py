@@ -82,14 +82,14 @@ def run_cv(X,y,clf_class,**kwargs):
 #***********
 
 from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier as DT
 def accuracy(y_true,y_pred):
     # NumPy interprets True and False as 1. and 0.
     return np.mean(y_true == y_pred)
 
 
 print "Decision Tree:"
-print "%.3f" % accuracy(y, run_cv(X,y,RF))
+print "%.3f" % accuracy(y, run_cv(X,y,DT))
 
 
 #**********
@@ -110,8 +110,7 @@ def run_prob_cv(X, y, clf_class, **kwargs):
 import warnings
 warnings.filterwarnings('ignore')
 
-# Use 10 estimators so predictions are all multiples of 0.1
-pred_prob = run_prob_cv(X, y, RF, n_estimators=10)
+pred_prob = run_prob_cv(X, y, DT)
 pred_churn = pred_prob[:,1]
 is_churn = y == 1
 
@@ -194,7 +193,7 @@ from sklearn.metrics import confusion_matrix
 
 
 # Compute confusion matrix
-cm = confusion_matrix(y, run_cv(X,y,RF))
+cm = confusion_matrix(y, run_cv(X,y,DT))
 
 print(cm)
 
